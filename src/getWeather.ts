@@ -11,7 +11,7 @@ async function getWeather(city: string, units: string, lang: string) {
     '#weatherReading'
   ) as HTMLDivElement | null;
   WeatherDisplay.innerHTML = `
-    <img src="https://cutewallpaper.org/21/loading-gif-transparent-background/2-Methods-to-Recover-an-Unsaved-PowerPoint-File.gif">
+    <img id="loadingIcon" src="https://cdn-icons-png.flaticon.com/512/7782/7782896.png">
   `;
 
   //api key is plain text but this is a free key for Open Weather  and I doubt anyone is going to be interested;
@@ -28,14 +28,23 @@ async function getWeather(city: string, units: string, lang: string) {
     humidity: string;
   }
 
-  try {
-    let unitSign = () => {
-      if (units == 'metric') return 'ºC';
-      else if (units == 'imperial') return 'ºK';
-      else if (units == 'fahrenheit') return 'ºF';
-    };
-    const response = await fetch(url, { mode: 'cors' });
-    const responseJson = await response.json();
+  let unitSign = () => {
+    if (units == 'metric') return 'ºC';
+    else if (units == 'imperial') return 'ºK';
+    else if (units == 'fahrenheit') return 'ºF';
+  };
+  const response = await fetch(url, { mode: 'cors' });
+  const responseJson = await response.json();
+
+  if (responseJson.cod == '404') {
+    WeatherDisplay.innerHTML = `
+    <img id="errorIcon" src="https://cdn-icons-png.flaticon.com/512/2001/2001386.png">
+    <p id="errorCode">${responseJson.cod}</p>
+    <p id="errorMsg">${responseJson.message}</p>
+  `;
+    //console.log('ERROR:', responseJson);
+    return responseJson;
+  } else {
     const responseDate = new Date(responseJson.dt);
     //console.log('response as json', responseJson);
     let currentWeather: Weather = {
@@ -48,8 +57,5 @@ async function getWeather(city: string, units: string, lang: string) {
     };
     //console.log('pre-export object', currentWeather);
     return currentWeather;
-  } catch (e) {
-    alert('Sorry, there has been an error, for more info, check the console');
-    console.log('ERROR:', e);
   }
 }

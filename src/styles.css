@@ -65,11 +65,12 @@ footer {
   margin-bottom: 0rem;
 }
 
-#weatherIcon::selection{
-  background:none !important;
+#weatherIcon::selection {
+  background: none !important;
 }
 
-#currentWeatherDesc {
+#currentWeatherDesc,
+#errorCode {
   color: #fff;
   font-size: 4vmin;
   font-weight: bold;
@@ -77,13 +78,34 @@ footer {
   margin-bottom: 1rem;
   text-decoration: underline;
 }
-#currentWeatherValues {
+#currentWeatherValues,
+#errorMsg {
   color: #fff;
   font-size: 2vmin;
+  text-transform: capitalize;
 }
 
-#weatherIcon {
+#weatherIcon,
+#loadingIcon,
+#errorIcon {
   padding: 1rem;
   width: 25vmin;
   height: auto;
+}
+
+#loadingIcon {
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(45deg);
+  }
+}
+
+input:invalid {
+  border: 2px solid red;
 }

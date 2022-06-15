@@ -46,8 +46,8 @@ function weatherFormListener() {
     return () => {
       WeatherFormDiv.innerHTML = `
       <form id="weatherForm" onsubmit="return false">
-        <input id="cityNameForm" type="text" name="city" placeholder="City">
-        <select id="unitsForm">
+        <input autocomplete="off" required minlength="2" maxlength="20" id="cityNameForm" type="text" name="city" placeholder="City">
+        <select required id="unitsForm">
           <option value="metric"> Metric (ºC) </option>
           <option value="fahrenheit"> Fahrenheit (ºF) </option>
           <option value="imperial"> Imperial (ºK) </option>
