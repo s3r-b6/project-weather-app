@@ -1,4 +1,4 @@
-import { getWeather } from './getWeather.js';
+import { getWeather } from './getWeather';
 
 window.onload = () => {
   randomWeather();
@@ -8,9 +8,7 @@ window.onload = () => {
 
 let city: string;
 let units: 'metric' | 'fahrenheit' | 'imperial';
-let lang: string;
-lang = 'en';
-let weatherObject: any;
+let lang: string = 'en';
 
 interface Weather {
   desc: string;
@@ -99,7 +97,7 @@ function randomWeather() {
   else if (random == 4 || random == 5) city = 'Cuenca';
   else if (random == 6 || random == 7) city = 'Milwaukee';
   else if (random > 7) city = 'Tokyo';
-  console.log('random: ', random, city);
+  //console.log('random: ', random, city);
 
   let weatherObject = getWeather(city, units, lang);
   //as the fetch is too fast, the gif spawns and gets deleted too fast, so, I added a fake delay
@@ -181,7 +179,7 @@ async function drawWeather(weatherObject: Promise<Weather | undefined>) {
     <h3 id="currentWeatherDesc"> ${weatherDescr} </h3>
     `;
     WeatherImgDom.src = imgSrc;
-    console.log(weatherValues);
+    //console.log(weatherValues);
     WeatherValDom.innerHTML = `
       <p>Max. Temperature: ${weatherValues.Max} </p>
       <p>min. Temperature: ${weatherValues.min} </p>
@@ -189,5 +187,5 @@ async function drawWeather(weatherObject: Promise<Weather | undefined>) {
       <p>Humidity: ${weatherValues.humid}</p>
     `;
   }
-  console.log('returned object', await weatherObject);
+  //console.log('returned object', await weatherObject);
 }

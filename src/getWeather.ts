@@ -37,7 +37,7 @@ async function getWeather(city: string, units: string, lang: string) {
     const response = await fetch(url, { mode: 'cors' });
     const responseJson = await response.json();
     const responseDate = new Date(responseJson.dt);
-    console.log('response as json', responseJson);
+    //console.log('response as json', responseJson);
     let currentWeather: Weather = {
       desc: responseJson.weather[0].description,
       hour: responseDate.getHours(),
@@ -46,9 +46,10 @@ async function getWeather(city: string, units: string, lang: string) {
       tempSens: responseJson.main.feels_like + unitSign(),
       humidity: responseJson.main.humidity + '%',
     };
-    console.log('pre-export object', currentWeather);
+    //console.log('pre-export object', currentWeather);
     return currentWeather;
   } catch (e) {
+    alert('Sorry, there has been an error, for more info, check the console');
     console.log('ERROR:', e);
   }
 }
