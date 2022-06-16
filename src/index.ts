@@ -27,7 +27,7 @@ function initButton() {
   if (Form) Form.remove();
   WeatherFormDiv.innerHTML = `
         <div id="weatherFormDiv">
-          <button id="spawnForm">Check the weather somewhere</button>
+          <button id="spawnForm">Check the weather somewhere else</button>
         </div>
         `;
   weatherFormListener();
@@ -46,7 +46,7 @@ function weatherFormListener() {
     return () => {
       WeatherFormDiv.innerHTML = `
       <form id="weatherForm" onsubmit="return false">
-        <input autocomplete="off" required minlength="2" maxlength="20" id="cityNameForm" type="text" name="city" placeholder="City">
+        <input autocomplete="off" required minlength="2" maxlength="40" id="cityNameForm" type="text" name="city" placeholder="City">
         <select required id="unitsForm">
           <option value="metric"> Metric (ºC) </option>
           <option value="fahrenheit"> Fahrenheit (ºF) </option>
@@ -70,7 +70,7 @@ function weatherFormListener() {
     ) as HTMLButtonElement | null;
     SubmitButton.onclick = () => {
       if (
-        /\w{2,20}/.test(City.value) &&
+        /\w{2,40}/.test(City.value) &&
         /[Metric]|[Imperial]|[Fahrenheit]/.test(Units.value)
       ) {
         city = City.value;
@@ -110,82 +110,88 @@ function randomWeather() {
 //https://www.flaticon.com/packs/weather-1001
 
 async function drawWeather(weatherObject: Promise<Weather | undefined>) {
-  const WeatherIcons = {
-    rainy: '../src/icons/rain.png',
-    snowy: '../src/icons/snow.png',
-    dayThunderstorm: '../src/icons/day-thunderstorm.png',
-    nightThunderstorm: '../src/icons/night-thunderstorm.png',
-    fallingStar: '../src/icons/falling-star.png',
-    clearNight: '../src/icons/clear-night.png',
-    clearDay: '../src/icons/clear-day.png',
-    cloudyDay: '../src/icons/cloudy-day.png',
-    cloudyNight: '../src/icons/cloudy-night.png',
-    eclipse: '../src/icons/eclipse.png',
-  };
-  let weatherDescr: string = (await weatherObject).desc;
-  let weatherValues = {
-    Max: (await weatherObject).maxTemp,
-    min: (await weatherObject).minTemp,
-    tempSen: (await weatherObject).tempSens,
-    humid: (await weatherObject).humidity,
-  };
-  let weatherHour: number = (await weatherObject).hour;
-  let imgSrc: string;
-  //check for the type of weather and assign an image depending on the case
-  if (weatherDescr.includes('rain')) {
-    imgSrc = WeatherIcons.rainy;
-  } else if (weatherDescr.includes('clouds')) {
-    if (weatherHour > 20) imgSrc = WeatherIcons.cloudyNight;
-    else imgSrc = WeatherIcons.cloudyDay;
-  } else if (weatherDescr.includes('snow')) {
-    imgSrc = WeatherIcons.snowy;
-  } else if (weatherDescr.includes('thunder')) {
-    if (weatherHour > 20) imgSrc = WeatherIcons.nightThunderstorm;
-    else imgSrc = WeatherIcons.dayThunderstorm;
-  } else if (weatherDescr.includes('clear')) {
-    if (weatherHour > 20) imgSrc = WeatherIcons.clearNight;
-    else imgSrc = WeatherIcons.clearDay;
-  } else if (weatherDescr.includes('eclipse')) {
-    imgSrc = WeatherIcons.eclipse;
-  } else if (weatherDescr.includes('falling stars')) {
-    imgSrc = WeatherIcons.fallingStar;
-  }
+  try {
+    const WeatherIcons = {
+      rainy: '../src/icons/rain.png',
+      snowy: '../src/icons/snow.png',
+      dayThunderstorm: '../src/icons/day-thunderstorm.png',
+      nightThunderstorm: '../src/icons/night-thunderstorm.png',
+      fallingStar: '../src/icons/falling-star.png',
+      clearNight: '../src/icons/clear-night.png',
+      clearDay: '../src/icons/clear-day.png',
+      cloudyDay: '../src/icons/cloudy-day.png',
+      cloudyNight: '../src/icons/cloudy-night.png',
+      eclipse: '../src/icons/eclipse.png',
+    };
+    let weatherDescr: string = (await weatherObject).desc;
+    let weatherValues = {
+      Max: (await weatherObject).maxTemp,
+      min: (await weatherObject).minTemp,
+      tempSen: (await weatherObject).tempSens,
+      humid: (await weatherObject).humidity,
+    };
+    let weatherHour: number = (await weatherObject).hour;
+    let imgSrc: string;
 
-  const WeatherDiv = document.querySelector(
-    '#weatherReading'
-  ) as HTMLImageElement | null;
-  WeatherDiv.innerHTML = `
+    //check for the type of weather and assign an image depending on the case
+    if (weatherDescr.includes('rain')) {
+      imgSrc = WeatherIcons.rainy;
+    } else if (weatherDescr.includes('clouds')) {
+      if (weatherHour > 20) imgSrc = WeatherIcons.cloudyNight;
+      else imgSrc = WeatherIcons.cloudyDay;
+    } else if (weatherDescr.includes('snow')) {
+      imgSrc = WeatherIcons.snowy;
+    } else if (weatherDescr.includes('thunder')) {
+      if (weatherHour > 20) imgSrc = WeatherIcons.nightThunderstorm;
+      else imgSrc = WeatherIcons.dayThunderstorm;
+    } else if (weatherDescr.includes('clear')) {
+      if (weatherHour > 20) imgSrc = WeatherIcons.clearNight;
+      else imgSrc = WeatherIcons.clearDay;
+    } else if (weatherDescr.includes('eclipse')) {
+      imgSrc = WeatherIcons.eclipse;
+    } else if (weatherDescr.includes('falling stars')) {
+      imgSrc = WeatherIcons.fallingStar;
+    }
+
+    const WeatherDiv = document.querySelector(
+      '#weatherReading'
+    ) as HTMLImageElement | null;
+    WeatherDiv.innerHTML = `
         <div id="currentWeatherDiv"></div>
         <img id="weatherIcon" src="" />
         <div id="currentWeatherValues"></div>
     `;
-  const WeatherImgDom = document.querySelector(
-    '#weatherIcon'
-  ) as HTMLImageElement | null;
-  const WeatherDescDom = document.querySelector(
-    '#currentWeatherDiv'
-  ) as HTMLTextAreaElement | null;
-  const WeatherValDom = document.querySelector(
-    '#currentWeatherValues'
-  ) as HTMLTextAreaElement | null;
+    const WeatherImgDom = document.querySelector(
+      '#weatherIcon'
+    ) as HTMLImageElement | null;
+    const WeatherDescDom = document.querySelector(
+      '#currentWeatherDiv'
+    ) as HTMLTextAreaElement | null;
+    const WeatherValDom = document.querySelector(
+      '#currentWeatherValues'
+    ) as HTMLTextAreaElement | null;
 
-  if (
-    WeatherDescDom != null &&
-    WeatherImgDom != null &&
-    WeatherValDom != null
-  ) {
-    WeatherDescDom.innerHTML = `
+    if (
+      WeatherDescDom != null &&
+      WeatherImgDom != null &&
+      WeatherValDom != null
+    ) {
+      WeatherDescDom.innerHTML = `
     <h3 id="currentCity"> ${city} </h3>
     <h3 id="currentWeatherDesc"> ${weatherDescr} </h3>
     `;
-    WeatherImgDom.src = imgSrc;
-    //console.log(weatherValues);
-    WeatherValDom.innerHTML = `
+      WeatherImgDom.src = imgSrc;
+      //console.log(weatherValues);
+      WeatherValDom.innerHTML = `
       <p>Max. Temperature: ${weatherValues.Max} </p>
       <p>min. Temperature: ${weatherValues.min} </p>
       <p>Thermic sensation: ${weatherValues.tempSen}</p>
       <p>Humidity: ${weatherValues.humid}</p>
     `;
+    }
+  } catch {
+    new Error();
+    return;
   }
   //console.log('returned object', await weatherObject);
 }

@@ -78,8 +78,7 @@ footer {
   margin-bottom: 1rem;
   text-decoration: underline;
 }
-#currentWeatherValues,
-#errorMsg {
+#currentWeatherValues {
   color: #fff;
   font-size: 2vmin;
   text-transform: capitalize;
@@ -91,6 +90,10 @@ footer {
   padding: 1rem;
   width: 25vmin;
   height: auto;
+}
+
+#spawnForm {
+  width: 100%;
 }
 
 #loadingIcon {

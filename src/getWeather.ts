@@ -36,7 +36,7 @@ async function getWeather(city: string, units: string, lang: string) {
   const response = await fetch(url, { mode: 'cors' });
   const responseJson = await response.json();
 
-  if (responseJson.cod == '404') {
+  if (responseJson.cod != '200') {
     WeatherDisplay.innerHTML = `
     <img id="errorIcon" src="https://cdn-icons-png.flaticon.com/512/2001/2001386.png">
     <p id="errorCode">${responseJson.cod}</p>
@@ -46,6 +46,7 @@ async function getWeather(city: string, units: string, lang: string) {
     return responseJson;
   } else {
     const responseDate = new Date(responseJson.dt);
+    //console.log(response);
     //console.log('response as json', responseJson);
     let currentWeather: Weather = {
       desc: responseJson.weather[0].description,
